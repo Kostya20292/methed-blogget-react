@@ -8,15 +8,16 @@ import notphoto from './img/notphoto.jpg';
 import style from './Post.module.css';
 
 export const Post = ({ postData }) => {
-  const { title, author, ups, date } = postData;
+  const { title, permalink, author, ups, created, thumbnail } = postData;
+  const img = thumbnail.replace(/\?.*$/, '');
 
   return (
     <li className={style.post}>
-      <img className={style.img} src={notphoto} alt={title} />
+      <img className={style.img} src={img !== 'self' ? img : notphoto} alt={title} />
 
       <div className={style.content}>
         <h2 className={style.title}>
-          <a className={style.linkPost} href="#post">
+          <a className={style.linkPost} href={`https://www.reddit.com/${permalink}`}>
             {title}
           </a>
         </h2>
@@ -35,8 +36,8 @@ export const Post = ({ postData }) => {
         <button className={style.down} aria-label="Уменьшить рейтинг" />
       </div>
 
-      <time className={style.date} dateTime={date}>
-        {formatDate(date)}
+      <time className={style.date} dateTime={created}>
+        {formatDate(created)}
       </time>
     </li>
   );
