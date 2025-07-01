@@ -10,5 +10,4 @@ export const formatDate = (date) => {
   };
 
   return new Intl.DateTimeFormat('ru', options).format(new Date(d));
-  // return new Intl.DateTimeFormat('ru', options).format(new Date(date));
 };

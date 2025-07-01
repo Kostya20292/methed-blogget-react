@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { formatDate } from '../../../../utils/formatDate';
+import { Modal } from '../../../Modal/Modal';
 
 import { ReactComponent as DeleteIcon } from './img/delete.svg';
 import notphoto from './img/notphoto.jpg';
@@ -8,7 +10,9 @@ import notphoto from './img/notphoto.jpg';
 import style from './Post.module.css';
 
 export const Post = ({ postData }) => {
-  const { title, permalink, author, ups, created, thumbnail } = postData;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { title, author, ups, created, thumbnail, id } = postData;
+
   const img = thumbnail.replace(/\?.*$/, '');
 
   return (
@@ -17,7 +21,7 @@ export const Post = ({ postData }) => {
 
       <div className={style.content}>
         <h2 className={style.title}>
-          <a className={style.linkPost} href={`https://www.reddit.com/${permalink}`}>
+          <a className={style.linkPost} href="#post" onClick={() => setIsModalOpen(true)}>
             {title}
           </a>
         </h2>
@@ -39,6 +43,15 @@ export const Post = ({ postData }) => {
       <time className={style.date} dateTime={created}>
         {formatDate(created)}
       </time>
+
+      {isModalOpen && (
+        <Modal
+          id={id}
+          closeModal={() => {
+            setIsModalOpen(false);
+          }}
+        />
+      )}
     </li>
   );
 };
