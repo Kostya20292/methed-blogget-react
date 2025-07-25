@@ -1,0 +1,24 @@
+import { DELETE_TOKEN, UPDATE_TOKEN } from './tokenActions';
+
+const initialState = {
+  token: '',
+};
+
+export const tokenReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case UPDATE_TOKEN:
+      return {
+        ...state,
+        token: action.token,
+      };
+
+    case DELETE_TOKEN:
+      return {
+        ...state,
+        token: '',
+      };
+
+    default:
+      return state;
+  }
+};

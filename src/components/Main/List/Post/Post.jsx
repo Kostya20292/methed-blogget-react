@@ -21,13 +21,11 @@ export const Post = ({ postData }) => {
 
       <div className={style.content}>
         <h2 className={style.title}>
-          <a className={style.linkPost} href="#post" onClick={() => setIsModalOpen(true)}>
+          <span className={style.linkPost} onClick={() => setIsModalOpen(true)}>
             {title}
-          </a>
+          </span>
         </h2>
-        <a className={style.linkAuthor} href="#author">
-          {author}
-        </a>
+        <span className={style.linkAuthor}>{author}</span>
       </div>
 
       <button className={style.delete}>

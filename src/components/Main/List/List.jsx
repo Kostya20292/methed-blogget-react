@@ -1,21 +1,20 @@
 import { Post } from './Post/Post';
+import { Preloader } from '../../UI/Preloader/Preloader';
+
+import { usePosts } from '../../../hooks/usePosts';
 
 import style from './List.module.css';
-import { useContext } from 'react';
-import { postsContext } from '../../../context/postsContext';
 
 export const List = () => {
-  const { posts } = useContext(postsContext);
+  const [posts, status] = usePosts();
 
-  if (posts) {
-    return (
-      <ul className={style.list}>
-        {posts.map(({ data }) => (
-          <Post key={data.id} postData={data} />
-        ))}
-      </ul>
-    );
-  } else {
-    return <span>Постов нет!!!</span>;
-  }
+  return (
+    <ul className={style.list}>
+      {status === 'loading' && <Preloader size={150} />}
+
+      {status === 'success' && posts.map(({ data }) => <Post key={data.id} postData={data} />)}
+
+      {status === 'error' && <span>Ошибка при загрузке постов!!!</span>}
+    </ul>
+  );
 };
