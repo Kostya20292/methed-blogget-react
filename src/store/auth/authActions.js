@@ -35,7 +35,7 @@ export const authRequestAsync = () => (dispatch, getState) => {
 
   dispatch(authRequest());
 
-  axios(`${URL_API}/api/v11/me`, {
+  axios(`${URL_API}/api/v1/me`, {
     headers: {
       Authorization: `bearer ${token}`,
     },
