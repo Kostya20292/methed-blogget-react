@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Markdown from 'markdown-to-jsx';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { FormComment } from './FormComment/FormComment';
 
@@ -15,14 +16,16 @@ import { ReactComponent as CloseIcon } from './img/close.svg';
 
 import style from './Modal.module.css';
 
-export const Modal = ({ id, closeModal }) => {
+export const Modal = () => {
+  const { id, page } = useParams();
+  const navigate = useNavigate();
   const overlayRef = useRef(null);
   const [openCommentForm, setOpenCommentForm] = useState(false);
   const [post, comments, status] = usePostData(id);
 
   const handleClick = (e) => {
     if (e.target === overlayRef.current || e.key === 'Escape') {
-      closeModal();
+      navigate(`/category/${page}`);
     }
   };
 
@@ -82,7 +85,7 @@ export const Modal = ({ id, closeModal }) => {
 
           <Comments comments={comments} />
 
-          <button className={style.close} onClick={closeModal}>
+          <button className={style.close} onClick={() => navigate(`/category/${page}`)}>
             <CloseIcon />
           </button>
         </div>

@@ -1,23 +1,14 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
-import { generateRandomId } from '../../../utils/generateRandomId.js';
-import { debounceRaf } from '../../../utils/debounce';
+import { debounceRef } from '../../../utils/debounce';
 
-import { ReactComponent as HomeIcon } from './img/home.svg';
-import { ReactComponent as TopIcon } from './img/top.svg';
-import { ReactComponent as BestIcon } from './img/best.svg';
-import { ReactComponent as HotIcon } from './img/hot.svg';
+import { LIST } from '../../../constants/constants';
+
 import { ReactComponent as ArrowIcon } from './img/arrow.svg';
 
 import style from './Tabs.module.css';
-
-const LIST = [
-  { value: 'Главная', Icon: HomeIcon },
-  { value: 'Топ', Icon: TopIcon },
-  { value: 'Лучшие', Icon: BestIcon },
-  { value: 'Горячие', Icon: HotIcon },
-].map((item) => ({ ...item, id: generateRandomId() }));
 
 export const Tabs = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -33,7 +24,7 @@ export const Tabs = () => {
   };
 
   useEffect(() => {
-    const debounceResize = debounceRaf(handleResize);
+    const debounceResize = debounceRef(handleResize);
 
     debounceResize();
 
@@ -61,14 +52,21 @@ export const Tabs = () => {
       )}
 
       {(isDropDownOpen || !isDropDown) && (
-        <ul className={style.list} onClick={handleClick}>
-          {LIST.map(({ value, id, Icon }) => (
-            <li className={style.item} key={id}>
+        <ul className={style.list}>
+          {LIST.map(({ value, id, Icon, link }) => (
+            <Link
+              className={style.item}
+              key={id}
+              to={`/category/${link}`}
+              onClick={(e) => {
+                handleClick(e);
+              }}
+            >
               <button className={style.btn}>
                 {value}
                 {Icon && <Icon width={30} height={30} />}
               </button>
-            </li>
+            </Link>
           ))}
         </ul>
       )}

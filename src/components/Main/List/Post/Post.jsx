@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { formatDate } from '../../../../utils/formatDate';
-import { Modal } from '../../../Modal/Modal';
 
 import { ReactComponent as DeleteIcon } from './img/delete.svg';
 import notphoto from './img/notphoto.jpg';
@@ -10,8 +9,8 @@ import notphoto from './img/notphoto.jpg';
 import style from './Post.module.css';
 
 export const Post = ({ postData }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { title, author, ups, created, thumbnail, id } = postData;
+  const { page } = useParams();
 
   const img = thumbnail.replace(/\?.*$/, '');
 
@@ -21,9 +20,9 @@ export const Post = ({ postData }) => {
 
       <div className={style.content}>
         <h2 className={style.title}>
-          <span className={style.linkPost} onClick={() => setIsModalOpen(true)}>
+          <Link className={style.linkPost} to={`/category/${page}/post/${id}`}>
             {title}
-          </span>
+          </Link>
         </h2>
         <span className={style.linkAuthor}>{author}</span>
       </div>
@@ -41,15 +40,6 @@ export const Post = ({ postData }) => {
       <time className={style.date} dateTime={created}>
         {formatDate(created)}
       </time>
-
-      {isModalOpen && (
-        <Modal
-          id={id}
-          closeModal={() => {
-            setIsModalOpen(false);
-          }}
-        />
-      )}
     </li>
   );
 };

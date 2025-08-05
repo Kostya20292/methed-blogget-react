@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux';
+import { Route, Routes } from 'react-router-dom';
 
 import { Header } from './components/Header/Header';
 import { Main } from './components/Main/Main';
@@ -14,11 +15,18 @@ const App = () => {
   dispatch(updateToken(getToken()));
 
   return (
-    <>
-      <Header />
-      <Main />
-      <Notification />
-    </>
+    <Routes>
+      <Route
+        path="*"
+        element={
+          <>
+            <Header />
+            <Main />
+            <Notification />
+          </>
+        }
+      />
+    </Routes>
   );
 };
 

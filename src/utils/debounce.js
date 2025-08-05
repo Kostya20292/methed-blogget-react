@@ -1,4 +1,4 @@
-export const debounceRaf = (fn) => {
+export const debounceRef = (fn) => {
   let raf = 0;
 
   return (...args) => {
