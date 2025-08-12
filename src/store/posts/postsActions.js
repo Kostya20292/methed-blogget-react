@@ -1,70 +1,58 @@
 import axios from 'axios';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import { URL_API } from '../../api/const';
 
-export const POSTS_REQUEST = 'POSTS_REQUEST';
-export const POSTS_REQUEST_SUCCESS = 'POSTS_REQUEST_SUCCESS';
-export const POSTS_REQUEST_SUCCESS_AFTER = 'POSTS_REQUEST_SUCCESS_AFTER';
-export const POSTS_REQUEST_ERROR = 'POSTS_REQUEST_ERROR';
-export const CHANGE_PAGE = 'CHANGE_PAGE';
+import { postsSlice } from './postsSlice';
 
-export const postsRequest = () => ({
-  type: POSTS_REQUEST,
-});
+export const postsRequestAsync = createAsyncThunk(
+  'posts/postsRequestAsync',
+  async (newPage, { getState, dispatch }) => {
+    let page = getState().postsReducer.page;
 
-export const postsRequestSuccess = (posts, after) => ({
-  type: POSTS_REQUEST_SUCCESS,
-  posts,
-  after,
-});
+    if (newPage) {
+      page = newPage;
+      dispatch(postsSlice.actions.changePage(page));
+    }
 
-export const postsRequestSuccessAfter = (posts, after) => ({
-  type: POSTS_REQUEST_SUCCESS_AFTER,
-  posts,
-  after,
-});
+    const token = getState().tokenReducer.token;
+    const after = getState().postsReducer.after;
+    const isLast = getState().postsReducer.isLast;
 
-export const postsRequestError = (error) => ({
-  type: POSTS_REQUEST_ERROR,
-  error,
-});
+    if (!token) return;
 
-export const changePage = (page) => ({
-  type: CHANGE_PAGE,
-  page,
-});
+    if (isLast) {
+      const currentState = getState().postsReducer;
+      return {
+        posts: currentState.posts,
+        after: currentState.after,
+      };
+    }
 
-export const postsRequestAsync = (newPage) => (dispatch, getState) => {
-  let page = getState().postsReducer.page;
-
-  if (newPage) {
-    page = newPage;
-    dispatch(changePage(page));
-  }
-
-  const token = getState().tokenReducer.token;
-  const after = getState().postsReducer.after;
-  const loading = getState().postsReducer.loading;
-  const isLast = getState().postsReducer.isLast;
-
-  if (!token || loading || isLast) return;
-
-  dispatch(postsRequest());
-
-  axios(`${URL_API}/${page}?limit=10${after && `&after=${after}`}`, {
-    headers: {
-      Authorization: `bearer ${token}`,
-    },
-  })
-    .then(({ data }) => {
-      if (after) {
-        dispatch(postsRequestSuccessAfter(data.data.children, data.data.after));
-      } else {
-        dispatch(postsRequestSuccess(data.data.children, data.data.after));
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      dispatch(postsRequestError(err.toString()));
+    const response = await axios(`${URL_API}/${page}?limit=10${after && `&after=${after}`}`, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
     });
-};
+
+    const { data } = response;
+
+    if (after) {
+      const existingPosts = getState().postsReducer.posts;
+      const newPosts = data.data.children;
+      const uniqueNewPosts = newPosts.filter(
+        (newPost) => !existingPosts.some((existingPost) => existingPost.data.id === newPost.data.id)
+      );
+
+      return {
+        posts: [...existingPosts, ...uniqueNewPosts],
+        after: data.data.after,
+      };
+    } else {
+      return {
+        posts: data.data.children,
+        after: data.data.after,
+      };
+    }
+  }
+);

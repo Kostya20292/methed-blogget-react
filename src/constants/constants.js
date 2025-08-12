@@ -11,3 +11,6 @@ export const LIST = [
   { value: 'Лучшие', Icon: BestIcon, link: 'best' },
   { value: 'Горячие', Icon: HotIcon, link: 'hot' },
 ].map((item) => ({ ...item, id: generateRandomId() }));
+
+export const UPDATE_TOKEN = 'token/updateToken';
+export const DELETE_TOKEN = 'token/deleteToken';

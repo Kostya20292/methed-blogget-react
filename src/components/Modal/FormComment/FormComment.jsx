@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-
-import { updateComment } from '../../../store/comments/commentsActions';
+import { commentSlice } from '../../../store/comment/commentSlice';
 
 import { useAuth } from '../../../hooks/useAuth';
 
@@ -17,7 +16,7 @@ export const FormComment = () => {
   };
 
   const handleChange = (e) => {
-    dispatch(updateComment(e.target.value));
+    dispatch(commentSlice.actions.updateComment({ comment: e.target.value }));
   };
 
   return (

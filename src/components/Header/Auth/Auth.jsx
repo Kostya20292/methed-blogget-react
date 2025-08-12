@@ -4,15 +4,13 @@ import { useDispatch } from 'react-redux';
 import { Preloader } from '../../UI/Preloader/Preloader';
 
 import { urlAuth } from '../../../api/auth';
-
-import { deleteToken } from '../../../store/token/tokenActions';
+import { tokenSlice } from '../../../store/token/tokenSlice';
 
 import { useAuth } from '../../../hooks/useAuth';
 
 import { ReactComponent as LoginIcon } from './img/login.svg';
 
 import style from './Auth.module.css';
-// import { toast } from 'react-toastify';
 
 export const Auth = () => {
   const [showLogout, setShowLogout] = useState(false);
@@ -20,7 +18,7 @@ export const Auth = () => {
   const dispatch = useDispatch();
 
   const handleClick = () => {
-    dispatch(deleteToken());
+    dispatch(tokenSlice.actions.deleteToken());
     clearAuth();
   };
 
