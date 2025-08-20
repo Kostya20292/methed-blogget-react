@@ -19,6 +19,7 @@ export const Main = () => (
         </Route>
         <Route index element={<Home />} />
         <Route path="/category" element={<Home />} />
+        <Route path="/auth" element={<Home />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </Layout>
