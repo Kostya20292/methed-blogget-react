@@ -20,6 +20,13 @@ export const postsSlice = createSlice({
       state.after = '';
       state.isLast = false;
     },
+    setSearchResults: (state, action) => {
+      state.posts = action.payload.posts;
+      state.after = action.payload.after;
+      state.isLast = !action.payload.after;
+      state.loading = false;
+      state.error = '';
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(postsRequestAsync.pending, (state) => {

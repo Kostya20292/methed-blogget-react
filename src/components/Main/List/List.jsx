@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useParams } from 'react-router-dom';
 
 import { Post } from './Post/Post';
+
 import { Preloader } from '../../UI/Preloader/Preloader';
 
 import { postsRequestAsync } from '../../../store/posts/postsActions';
@@ -13,6 +14,7 @@ export const List = () => {
   const posts = useSelector((state) => state.postsReducer.posts);
   const loading = useSelector((state) => state.postsReducer.loading);
   const error = useSelector((state) => state.postsReducer.error);
+  const searchLoading = useSelector((state) => state.searchReducer.loading);
   const endList = useRef(null);
   const dispatch = useDispatch();
   const { page } = useParams();
@@ -39,7 +41,7 @@ export const List = () => {
       }
     );
 
-    observer.observe(endList.current);
+    endList.current && observer.observe(endList.current);
 
     return () => {
       endList.current && observer.unobserve(endList.current);
@@ -49,7 +51,9 @@ export const List = () => {
   return (
     <>
       <ul className={style.list}>
-        {loading && !posts.length && !error ? (
+        {searchLoading ? (
+          <Preloader size={150} />
+        ) : loading && !posts.length && !error ? (
           <Preloader size={150} />
         ) : (
           <>

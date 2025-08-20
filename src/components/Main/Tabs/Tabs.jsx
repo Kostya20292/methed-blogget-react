@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { PropTypes } from 'prop-types';
 
@@ -14,6 +15,7 @@ export const Tabs = () => {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isDropDown, setIsDropDown] = useState(true);
   const [dropDownTitle, setDropDownTitle] = useState('Главная');
+  const token = useSelector((state) => state.tokenReducer.token);
 
   const handleResize = () => {
     if (document.documentElement.clientWidth < 768) {
@@ -36,6 +38,11 @@ export const Tabs = () => {
   }, []);
 
   const handleClick = (e) => {
+    if (!token) {
+      e.preventDefault();
+      return;
+    }
+
     setDropDownTitle(e.target.textContent);
     setIsDropDownOpen(false);
   };
